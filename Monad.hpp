@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <ostream>
 
 // A generic monad that stores some data,
 // and returns the result of applying a callable
@@ -22,3 +23,9 @@ public:
 private:
     const T data;
 };
+
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const Monad<T>& monad) {
+  os << monad.peek();
+  return os;
+}

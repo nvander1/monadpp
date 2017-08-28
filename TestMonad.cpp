@@ -9,6 +9,6 @@ const Monad<int> doubled(int x) {
 
 int main() {
   const Monad<int> intmonad(5);
-  std::cout << intmonad.peek() << std::endl;
-  std::cout << intmonad.bind(doubled).peek() << std::endl;
+  std::cout << intmonad << std::endl;
+  std::cout << intmonad.bind(doubled) << std::endl;
 }
