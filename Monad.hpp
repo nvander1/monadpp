@@ -9,7 +9,7 @@
 template <typename T>
 class Monad {
  public:
-  Monad(const T data) : d_data(data) {}
+  constexpr Monad(T data) : d_data{std::move(data)} {}
 
   template <typename F>
   const Monad<T> bind(const F& func) const {
