@@ -1,14 +1,25 @@
+#include "Monad.hpp"
+#include "gtest/gtest.h"
 #include <iostream>
 
-#include "Monad.hpp"
+const Monad<int> doubled(int);
 
 const Monad<int> doubled(int x) {
-  const Monad<int> result(x * 2);
-  return result;
+  return Monad<int>{x * 2};
 }
 
-int main() {
-  const Monad<int> intmonad(5);
-  std::cout << intmonad << std::endl;
-  std::cout << intmonad.bind(doubled) << std::endl;
+namespace {
+class MonadTest : public ::testing::Test {};
+}  // namespace
+
+TEST_F(MonadTest, DoubledMonad) {
+  constexpr int x = 5;
+  const Monad<int> intmonad(x);
+  EXPECT_EQ(intmonad.peek(), 5);
+  EXPECT_EQ(intmonad.bind(doubled).peek(), 10);
+}
+
+int main(int argc, char **argv) {
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }

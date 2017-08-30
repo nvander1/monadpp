@@ -9,17 +9,17 @@
 template <typename T>
 class Monad {
  public:
-  Monad(const T data) : data(data) {}
+  Monad(const T data) : d_data(data) {}
 
   template <typename F>
   const Monad<T> bind(const F& func) const {
-    return func(this->data);
+    return func(d_data);
   }
 
-  const T peek() const { return data; }
+  const T peek() const { return d_data; }
 
  private:
-  const T data;
+  const T d_data;
 };
 
 template <typename T>
