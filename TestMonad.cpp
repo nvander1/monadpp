@@ -1,12 +1,9 @@
 #include "Monad.hpp"
 #include "gtest/gtest.h"
-#include <iostream>
 
 const Monad<int> doubled(int);
 
-const Monad<int> doubled(int x) {
-  return Monad<int>{x * 2};
-}
+const Monad<int> doubled(int x) { return Monad<int>{x * 2}; }
 
 namespace {
 class MonadTest : public ::testing::Test {};
@@ -14,9 +11,9 @@ class MonadTest : public ::testing::Test {};
 
 TEST_F(MonadTest, DoubledMonad) {
   constexpr int x = 5;
-  const Monad<int> intmonad(x);
-  EXPECT_EQ(intmonad.peek(), 5);
-  EXPECT_EQ(intmonad.bind(doubled).peek(), 10);
+  const Monad<int> intmonad{x};
+  EXPECT_EQ(5, intmonad);
+  EXPECT_EQ((intmonad >>= doubled), 10);
 }
 
 int main(int argc, char **argv) {
