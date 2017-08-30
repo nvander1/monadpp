@@ -5,11 +5,7 @@ const Monad<int> doubled(int);
 
 const Monad<int> doubled(int x) { return Monad<int>{x * 2}; }
 
-namespace {
-class MonadTest : public ::testing::Test {};
-}  // namespace
-
-TEST_F(MonadTest, DoubledMonad) {
+TEST(MonadTest, DoubledMonad) {
   constexpr int x = 5;
   const Monad<int> intmonad{x};
   EXPECT_EQ(5, intmonad);
