@@ -29,9 +29,11 @@ struct Just : public Maybe<A> {
   const A d_val;
 };
 
-template <typename Lhs, typename Rhs, typename = std::enable_if_t<
-std::is_base_of_v<Maybe<int>, Lhs> &&
-std::is_base_of_v<Maybe<int>, Rhs>>>
+template <typename Base, typename... Rest>
+inline constexpr bool base_of_all_v = (std::is_base_of_v<Base, Rest> && ...);
+
+template <typename Lhs, typename Rhs,
+          typename = std::enable_if_t<base_of_all_v<Maybe<int>, Lhs, Rhs>>>
 constexpr auto add(Lhs mx, Rhs my) {
   return mx >>= [=](const int x) constexpr {
     return my >>= [=](const int y) constexpr { return Just{x + y}; };

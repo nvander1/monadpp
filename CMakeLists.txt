@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+add_executable(maybe Maybe.cpp)
 add_executable(${PROJECT_TEST_NAME} TestMonad.cpp)
 target_compile_features(${PROJECT_TEST_NAME} PRIVATE cxx_constexpr cxx_variadic_templates cxx_std_17 cxx_user_literals)
 
@@ -19,7 +20,5 @@ endif()
 
 enable_testing()
 find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_TEST_NAME} PRIVATE GTest::GTest GTest::Main)
-target_include_directories(${PROJECT_TEST_NAME} PUBLIC include ${GTEST_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 add_test(TestMonad ${PROJECT_TEST_NAME})
