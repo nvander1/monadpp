@@ -1,5 +1,4 @@
-#ifndef MAYBE_MONAD_H_
-#define MAYBE_MONAD_H_
+#pragma once
 
 #include <type_traits>
 
@@ -37,4 +36,3 @@ constexpr auto add(Lhs mx, Rhs my) {
     return my >>= [=](const int y) constexpr { return Just{x + y}; };
   };
 }
-#endif
