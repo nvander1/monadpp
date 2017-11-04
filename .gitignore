@@ -32,3 +32,10 @@
 
 # YCM config
 .ycm_extra_conf.py
+
+# Cabal files and directories
+haskell/cabal.sandbox.config
+haskell/ChangeLog.md
+haskell/dist
+haskell/LICENSE
+haskell/.cabal-sandbox/
