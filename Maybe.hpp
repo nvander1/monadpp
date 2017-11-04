@@ -2,6 +2,10 @@
 
 #include <type_traits>
 
+#include "Monad.hpp"
+
+namespace monad {
+
 // data Maybe a = Just a | Nothing
 class Maybe {};
 
@@ -36,3 +40,5 @@ constexpr auto add(Lhs mx, Rhs my) {
     return my >>= [=](const int y) constexpr { return Just{x + y}; };
   };
 }
+
+}  // namespace monad
