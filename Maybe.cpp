@@ -2,7 +2,7 @@
 
 int main() {
     constexpr auto const a = Just{5};
-    constexpr auto const b = Nothing<int>{};
+    constexpr auto const b = Nothing{};
     constexpr auto const result = add(a, b);
 }
 
