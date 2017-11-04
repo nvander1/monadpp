@@ -8,7 +8,6 @@ test1 = TestCase (assertEqual "test 1,"
                   )
                   (Nothing)
                  )
-tests = TestList [TestLabel "test1" test1, TestLabel "test2" test2]
 
 test2 = TestCase (assertEqual "test 2,"
                   (
@@ -16,3 +15,5 @@ test2 = TestCase (assertEqual "test 2,"
                   )
                   (Nothing)
                  )
+
+tests = TestList [TestLabel "test1" test1, TestLabel "test2" test2]

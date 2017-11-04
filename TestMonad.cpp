@@ -39,6 +39,26 @@ TEST(MonadTest, MonadIgnore) {
   EXPECT_EQ(stringmonad, stringmonad2);
 }
 
+TEST(ListTest, ListDouble) {
+  std::list<int> list{1, 2, 4, 10};
+  std::function<std::list<int>(int)> double_func = [](int num) {
+    return return_monad(num * 2);
+  };
+  std::list<int> double_list = list >>= double_func;
+  std::list<int> expected{2, 4, 8, 20};
+  EXPECT_EQ(double_list, expected);
+}
+
+TEST(ListTest, ListIntToString) {
+  std::list<int> list{1, 2, 4, 10};
+  std::function<std::list<std::string>(int)> string_func = [](int num) {
+    return return_monad(std::to_string(num));
+  };
+  std::list<std::string> string_list = list >>= string_func;
+  std::list<std::string> expected{"1", "2", "4", "10"};
+  EXPECT_EQ(string_list, expected);
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
