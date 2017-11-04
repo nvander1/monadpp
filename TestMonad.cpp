@@ -52,11 +52,22 @@ TEST(ListTest, ListDouble) {
 TEST(ListTest, ListIntToString) {
   std::list<int> list{1, 2, 4, 10};
   std::function<std::list<std::string>(int)> string_func = [](int num) {
-    return return_monad(std::to_string(num));
+    return std::list<std::string>{std::to_string(num),
+                                  std::to_string(num * -1)};
   };
   std::list<std::string> string_list = list >>= string_func;
-  std::list<std::string> expected{"1", "2", "4", "10"};
+  std::list<std::string> expected{"1", "-1", "2", "-2", "4", "-4", "10", "-10"};
   EXPECT_EQ(string_list, expected);
+}
+
+TEST(ListTest, ListIgnore) {
+  std::list<int> list_int{1, 2, 4, 10};
+  std::list<double> list_double{1.0, -12.0391, 33.33, 10.01};
+  std::list<double> list = list_int >> list_double;
+  std::list<double> expected{1.0,   -12.0391, 33.33, 10.01,    1.0,   -12.0391,
+                             33.33, 10.01,    1.0,   -12.0391, 33.33, 10.01,
+                             1.0,   -12.0391, 33.33, 10.01};
+  EXPECT_EQ(list, expected);
 }
 
 int main(int argc, char **argv) {
