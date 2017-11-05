@@ -7,11 +7,13 @@
 namespace monad {
 
 // data Maybe a = Just a | Nothing
+template <typename A>
 class Maybe {};
 
 // (>>=) :: Maybe a -> (a -> Maybe b) -> Maybe b
 
-struct Nothing : public Maybe {
+template <typename A>
+struct Nothing : public Maybe<A> {
   // Nothing >>= _ = Nothing
   template <typename F>
   constexpr auto operator>>=(F &&) const {
@@ -20,7 +22,7 @@ struct Nothing : public Maybe {
 };
 
 template <typename A>
-struct Just : public Maybe {
+struct Just : public Maybe<A> {
   constexpr Just(A val) : d_val(val) {}
 
   template <typename F>
@@ -34,7 +36,7 @@ template <typename Base, typename... Rest>
 inline constexpr bool base_of_all_v = (std::is_base_of_v<Base, Rest> && ...);
 
 template <typename Lhs, typename Rhs,
-          typename = std::enable_if_t<base_of_all_v<Maybe, Lhs, Rhs>>>
+          typename = std::enable_if_t<base_of_all_v<Maybe<int>, Lhs, Rhs>>>
 constexpr auto add(Lhs mx, Rhs my) {
   return mx >>= [=](const int x) constexpr {
     return my >>= [=](const int y) constexpr { return Just{x + y}; };
