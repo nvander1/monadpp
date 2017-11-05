@@ -127,3 +127,21 @@ Nothing >>= _ = Nothing
 ```
 <!-- .element: class="fragment" -->
 
+---
+
+## State Monad
+```haskell
+newtype State s a = State { runState :: s -> (a, s) }
+```
+Really the State Monad acts like a container for the state and a function to the next state
+<!-- .element: class="fragment" -->
+
+Here s is that function and a is the current value
+<!-- .element: class="fragment" -->
+
+---
+
+- State Monad
+- Printing
+- File I/O
+- Other messy or unpure actions
