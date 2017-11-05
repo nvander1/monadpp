@@ -1,3 +1,8 @@
+---
+revealOptions:
+    transition: 'fade'
+---
+
 # Monads
 
 William Jagels, Rushil Kumar, Ethan Schoen, Nik Vandehroof
@@ -8,7 +13,7 @@ William Jagels, Rushil Kumar, Ethan Schoen, Nik Vandehroof
 
 - What is a monad?
 - How is it useful?
-- How can we implement them in 
+- How can we implement them in compile-time C++?
 
 ---
 
@@ -57,9 +62,31 @@ public class PureStringBuilder {
     - Takes a value, constructs a monad to house the value
 <!-- .element: class="fragment" -->
 
-- Binding operation
+- Bind function
 <!-- .element: class="fragment" -->
     - Extracts a value from a monad, transforms it, and builds a new monad housing the result
+<!-- .element: class="fragment" -->
+
+---
+
+## Monad Laws
+###### Left Identity
+<!-- .element: class="fragment" -->
+```python
+bind(unit(a), f) == f(a)```
+<!-- .element: class="fragment" -->
+
+###### Right Identity
+<!-- .element: class="fragment" -->
+```python
+bind(m, unit) == m```
+<!-- .element: class="fragment" -->
+
+###### Associativity
+<!-- .element: class="fragment" -->
+```python
+bind(bind(m, f), g) == bind(m, bind(lambda x: bind(f(x), g)))
+```
 <!-- .element: class="fragment" -->
 
 ---
