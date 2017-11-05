@@ -29,9 +29,6 @@ struct Just {
   const A d_val;
 };
 
-template <typename Base, typename... Rest>
-inline constexpr bool base_of_all_v = (std::is_base_of_v<Base, Rest> && ...);
-
 template <typename T>
 struct is_maybe_helper : std::false_type {};
 
