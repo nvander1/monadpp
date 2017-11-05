@@ -1,7 +1,8 @@
-#include "Monad.hpp"
 #include "ListMonad.hpp"
+#include "Monad.hpp"
 #include "gtest/gtest.h"
 #include <array>
+#include <experimental/fixed_capacity_vector>
 
 using namespace monad;
 
@@ -13,4 +14,16 @@ TEST(list_monad, map_flatten) {
   static_assert(std::get<1>(y) == 2);
   EXPECT_EQ(y[0], 1);
   EXPECT_EQ(y[1], 2);
+}
+
+TEST(list_monad, dynamic) {
+  using std::experimental::fixed_capacity_vector;
+  constexpr fixed_capacity_vector<int, 4> vec = {1, 2, 3, 4};
+  constexpr auto f = [](int a) -> fixed_capacity_vector<int, 2> {
+    if (a % 2 == 0) return {{0, a}};
+    return {{a}};
+  };
+  constexpr fixed_capacity_vector<int, 8> mapped = vec >>= f;
+  static_assert(mapped.front() == 1);
+  static_assert(*(mapped.begin() + 1) == 0);
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <array>
+#include <experimental/fixed_capacity_vector>
 #include <tuple>
 
 namespace monad::detail {
@@ -53,5 +54,14 @@ constexpr auto map_flatten(const std::array<T, N> &list, F &&fn) {
   detail::map_flatten_helper<F> helper{std::move_if_noexcept(fn)};
   return tuple_to_array(std::apply(helper, list));
 }
+
+template <typename A>
+struct VecTraits;
+
+template <typename T, std::size_t N>
+struct VecTraits<std::experimental::fixed_capacity_vector<T, N>> {
+  static constexpr std::size_t capacity = N;
+  using type = T;
+};
 
 }  // namespace monad
