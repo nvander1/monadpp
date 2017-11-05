@@ -4,6 +4,13 @@ William Jagels, Rushil Kumar, Ethan Schoen, Nik Vandehroof
 
 ---
 
+## Overview
+
+- WHat is a Monad
+- Maybe Monads
+- 
+
+---
 ## Method Chaining
 
 ```java
@@ -45,6 +52,8 @@ public class PureStringBuilder {
     - Takes an underlying type, returns a monad containing that type
 - Binding operation
     - Takes a monad and a function mapping the underlying type to another monadic type
+
+---
 
 ## Monad Definition
 ```python
