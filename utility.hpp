@@ -2,8 +2,7 @@
 #include <array>
 #include <tuple>
 
-namespace monad {
-namespace detail {
+namespace monad::detail {
 struct tuple_to_array_helper {
   template <typename... Ts>
   constexpr auto operator()(Ts... args)
@@ -32,9 +31,9 @@ struct map_flatten_helper {
   }
   F fn;
 };
+}  // namespace monad::detail
 
-}  // namespace detail
-
+namespace monad {
 template <typename Base, typename... Rest>
 inline constexpr bool base_of_all_v = (std::is_base_of_v<Base, Rest> && ...);
 
