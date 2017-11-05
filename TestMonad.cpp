@@ -23,7 +23,7 @@ TEST(list_monad, dynamic) {
     if (a % 2 == 0) return {{0, a}};
     return {{a}};
   };
-  constexpr fixed_capacity_vector<int, 8> mapped = vec >>= f;
-  static_assert(mapped.front() == 1);
-  static_assert(*(mapped.begin() + 1) == 0);
+  constexpr auto mapped = vec >>= f;
+  constexpr auto expected = fixed_capacity_vector<int, 8>{{1, 0, 2, 3, 0, 4}};
+  static_assert(mapped == expected);
 }
