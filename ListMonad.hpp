@@ -4,7 +4,6 @@
 #include <tuple>
 
 namespace monad {
-// TODO: constrain this better
 template <typename T, std::size_t N, typename F,
           typename = std::enable_if_t<std::is_invocable_v<F, T>>>
 constexpr auto operator>>=(const std::array<T, N> &list, F &&fn) {
