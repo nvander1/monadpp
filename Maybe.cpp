@@ -4,9 +4,9 @@ using namespace monad;
 
 int main() {
   constexpr Just<int> const a = Just{5};
-  constexpr auto const b = Nothing{};
-  constexpr Nothing const result = add(a, b);
-  constexpr Nothing const ignored_result = a >> b;
+  constexpr Nothing<int> const b = Nothing<int>{};
+  constexpr Nothing<int> const result = add(a, b);
+  constexpr Nothing<int> const ignored_result = a >> b;
 }
 
 // add :: Maybe Int -> Maybe Int -> Maybe Int
