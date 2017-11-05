@@ -46,7 +46,7 @@ constexpr auto tuple_to_array(Tup &&tup) {
 template <typename T, std::size_t N, typename F>
 constexpr auto map(const std::array<T, N> &list, F &&fn) {
   detail::map_helper<F> helper{std::move(fn)};
-  return tuple_to_array(std::apply(helper, list));
+  return std::apply(helper, list);
 }
 
 template <typename T, std::size_t N, typename F>
