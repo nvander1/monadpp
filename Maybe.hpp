@@ -12,7 +12,7 @@ namespace monad {
 template <typename A>
 struct Nothing {
   // Nothing >>= _ = Nothing
-  template <typename F>
+  template <typename F, typename = std::enable_if_t<std::is_invocable_v<F, A>>>
   constexpr auto operator>>=(F &&) const {
     return Nothing{};
   }
