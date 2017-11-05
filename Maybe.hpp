@@ -22,7 +22,7 @@ template <typename A>
 struct Just {
   constexpr Just(A val) : d_val(val) {}
 
-  template <typename F>
+  template <typename F, typename = std::enable_if_t<std::is_invocable_v<F, A>>>
   constexpr auto operator>>=(F &&func) const {
     return func(d_val);
   }
