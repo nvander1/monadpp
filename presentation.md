@@ -6,11 +6,12 @@ William Jagels, Rushil Kumar, Ethan Schoen, Nik Vandehroof
 
 ## Overview
 
-- WHat is a Monad
-- Maybe Monads
-- 
+- What is a monad?
+- How is it useful?
+- How can we implement them in 
 
 ---
+
 ## Method Chaining
 
 ```java
@@ -47,11 +48,19 @@ public class PureStringBuilder {
 
 ## Formal Definition
 - Type constructor
-    - Takes an underlying type, returns the type of a monad containing that type
+<!-- .element: class="fragment" -->
+    - Defines how to obtain a monadic version of a type
+<!-- .element: class="fragment" -->
+
 - Unit function
-    - Takes an underlying type, returns a monad containing that type
+<!-- .element: class="fragment" -->
+    - Takes a value, constructs a monad to house the value
+<!-- .element: class="fragment" -->
+
 - Binding operation
-    - Takes a monad and a function mapping the underlying type to another monadic type
+<!-- .element: class="fragment" -->
+    - Extracts a value from a monad, transforms it, and builds a new monad housing the result
+<!-- .element: class="fragment" -->
 
 ---
 
@@ -75,3 +84,19 @@ class SimpleMonad:
         return f(self.x)
 ```
 <!-- .element: class="fragment" -->
+
+---
+
+## The Maybe Monad
+```haskell
+data Maybe t = Just t | Nothing
+```
+<!-- .element: class="fragment" -->
+
+```haskell
+(>>=) :: Maybe a -> (a -> Maybe b) -> Maybe b
+Nothing >>= _ = Nothing
+(Just x) >>= f = f x
+```
+<!-- .element: class="fragment" -->
+
