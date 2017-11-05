@@ -7,7 +7,15 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_executable(maybe Maybe.cpp)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+add_custom_command(
+    OUTPUT Maybe.hpp
+    COMMAND m4 Maybe.m4.hpp > ${CMAKE_CURRENT_BINARY_DIR}/Maybe.hpp && cp Maybe.m4.hpp ${CMAKE_CURRENT_BINARY_DIR}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    DEPENDS Maybe.m4.hpp
+)
+
+add_executable(maybe Maybe.cpp ${CMAKE_CURRENT_BINARY_DIR}/Maybe.hpp)
 add_executable(${PROJECT_TEST_NAME} TestMonad.cpp)
 target_compile_features(${PROJECT_TEST_NAME} PRIVATE cxx_constexpr cxx_variadic_templates cxx_std_17 cxx_user_literals)
 
