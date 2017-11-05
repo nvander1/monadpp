@@ -50,7 +50,7 @@ inline constexpr bool is_maybe_v = is_maybe<T>::value;
 
 template <typename Lhs, typename Rhs,
           typename = std::enable_if_t<is_maybe_v<Lhs> && is_maybe_v<Rhs>>>
-constexpr auto add(Lhs mx, Rhs my) {
+constexpr auto add(const Lhs &mx, const Rhs &my) {
   return mx >>= [=](const int x) constexpr {
     return my >>= [=](const int y) constexpr { return Just{x + y}; };
   };
