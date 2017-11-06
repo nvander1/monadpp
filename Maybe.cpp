@@ -7,6 +7,12 @@ int main() {
   constexpr Nothing<int> const b = Nothing<int>{};
   constexpr Nothing<int> const result = add(a, b);
   constexpr Nothing<int> const ignored_result = a >> b;
+  constexpr Nothing<int> const another_result = a >>= [=](auto num) {
+    constexpr Nothing<int> const temp_nothing{};
+    return temp_nothing >>= [=](auto second_num) {
+      return Just<int>{10};
+    };
+  };
 }
 
 // add :: Maybe Int -> Maybe Int -> Maybe Int
