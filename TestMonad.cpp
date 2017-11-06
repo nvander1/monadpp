@@ -32,6 +32,6 @@ TEST(list_monad, list_comp) {  // NOLINT
   using std::experimental::fixed_capacity_vector;
   constexpr fixed_capacity_vector<int, 4> vec = {1, 2, 3, 4};
   constexpr auto square = [](int a) { return return_vec_monad(a * a); };
-  constexpr auto end = vec >>= square;
-  static_assert(vec.at(0) == 1);
+  constexpr auto end = (vec >>= square) >>= square;
+  static_assert(end.at(1) == 16);
 }

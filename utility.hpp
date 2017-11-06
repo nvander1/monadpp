@@ -33,7 +33,6 @@ struct map_flatten_helper {
   F fn;
 };
 }  // namespace monad::detail
-
 namespace monad {
 template <typename Base, typename... Rest>
 inline constexpr bool base_of_all_v = (std::is_base_of_v<Base, Rest> && ...);
@@ -54,15 +53,6 @@ constexpr auto map_flatten(const std::array<T, N> &list, F &&fn) {
   detail::map_flatten_helper<F> helper{std::move_if_noexcept(fn)};
   return tuple_to_array(std::apply(helper, list));
 }
-
-template <typename A>
-struct VecTraits;
-
-template <typename T, std::size_t N>
-struct VecTraits<std::experimental::fixed_capacity_vector<T, N>> {
-  static constexpr std::size_t capacity = N;
-  using type = T;
-};
 
 template <typename F, typename... Args>
 auto curry(F &&f, Args &&... args) {
