@@ -10,7 +10,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(maybe Maybe.cpp)
 add_executable(${PROJECT_TEST_NAME} TestMonad.cpp)
 target_compile_features(${PROJECT_TEST_NAME} PUBLIC cxx_constexpr cxx_variadic_templates cxx_std_17 cxx_user_literals)
-target_include_directories(${PROJECT_TEST_NAME} PUBLIC include)
+target_include_directories(${PROJECT_TEST_NAME} SYSTEM PUBLIC include)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     target_compile_options(${PROJECT_TEST_NAME}
