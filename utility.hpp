@@ -64,4 +64,12 @@ struct VecTraits<std::experimental::fixed_capacity_vector<T, N>> {
   using type = T;
 };
 
+template <typename F, typename... Args>
+auto curry(F &&f, Args &&... args) {
+  return [=](auto &&... rest) {
+    return f(std::forward<Args>(args)...,
+             std::forward<decltype(rest)>(rest)...);
+  };
+}
+
 }  // namespace monad
