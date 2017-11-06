@@ -21,8 +21,8 @@ constexpr auto operator>>=(
   auto new_list =
       fixed_capacity_vector<typename traits::type, traits::capacity * N>{};
   for (const auto &e : list) {
-    for (const auto &f : fn(e)) {
-      new_list.push_back(f);
+    for (auto &&f : fn(e)) {
+      new_list.emplace_back(std::move(f));
     }
   }
   return new_list;
