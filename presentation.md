@@ -11,9 +11,10 @@ William Jagels, Rushil Kumar, Ethan Schoen, Nik Vandehroof
 
 ## Overview
 
-- What is a monad?
-- How is it useful?
-- How can we implement them in compile-time C++?
+Definition of monads
+Uses of monads
+Haskell examples
+Compile-time C++ monads
 
 ---
 
