@@ -127,6 +127,90 @@ instance Monad Maybe where
 
 ---
 
+## Maybe Monad Examples
+```haskell
+nothingMonadDo = do 
+  x <- Just 3
+  y <- Just 10
+  z <- Nothing
+  return (x + y + z)
+```
+<!-- .element: class="fragment" -->
+
+```haskell
+nothingMonadBind = Just 3 >>= (\x -> Just 10 >>= (\y -> Nothing >>= (\z -> return (x + y + z))))
+```
+<!-- .element: class="fragment" -->
+
+```haskell
+*Main> nothingMonadDo
+Nothing
+```
+<!-- .element: class="fragment" -->
+
+```haskell
+justMonadDo = do 
+  x <- Just 3
+  y <- Just 10
+  z <- Just 11
+  return (x + y + z)
+```
+<!-- .element: class="fragment" -->
+
+```haskell
+*Main> justMonadDo
+Just 24
+```
+<!-- .element: class="fragment" -->
+
+---
+
+## The List Monad
+```haskell
+instance Monad [] where  
+    return x = [x]  
+    xs >>= f = concat (map f xs)  
+    fail _ = []  
+```
+<!-- .element: class="fragment" -->
+
+---
+
+## List Monad Examples
+```haskell
+oddEvenList :: (Integral a) => [a] -> [a]
+oddEvenList list = do
+  x <- list
+  if odd x then [x, -x] else [x]
+```
+<!-- .element: class="fragment" -->
+
+```haskell
+oddEvenListBind :: (Integral a) => [a] -> [a]
+oddEvenListBind list = list >>= (\x -> if odd x then [x, -x] else [x])
+```
+<!-- .element: class="fragment" -->
+
+```haskell
+*Main> oddEvenList [1, 2, 4, 10]
+[1,-1,2,4,10]
+```
+<!-- .element: class="fragment" -->
+
+```haskell
+doubleMonad :: [a] -> [a]
+doubleMonad list = [-1, 2] >> list
+```
+<!-- .element: class="fragment" -->
+
+```haskell
+*Main> doubleMonad [1, 2, 4]
+[1,2,4,1,2,4]
+```
+<!-- .element: class="fragment" -->
+
+---
+
 ## State Monad
 ```haskell
 newtype State s a = State { runState :: s -> (a, s) }
