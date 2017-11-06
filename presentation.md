@@ -11,9 +11,10 @@ William Jagels, Rushil Kumar, Ethan Schoen, Nik Vandehroof
 
 ## Overview
 
-- What is a monad?
-- How is it useful?
-- How can we implement them in compile-time C++?
+Definition of monads
+Uses of monads
+Haskell examples
+Compile-time C++ monads
 
 ---
 
@@ -57,7 +58,7 @@ public class PureStringBuilder {
     - Defines how to obtain a monadic version of a type
 <!-- .element: class="fragment" -->
 
-- Unit function
+- Unit function (or return function)
 <!-- .element: class="fragment" -->
     - Takes a value, constructs a monad to house the value
 <!-- .element: class="fragment" -->
@@ -92,23 +93,18 @@ bind(bind(m, f), g) == bind(m, bind(lambda x: bind(f(x), g)))
 ---
 
 ## Monad Definition
-```python
-class Monad:
-    def __init__(self, x):
-        raise NotImplementedError
 
-    def bind(self, f):
-        raise NotImplementedError
-```
-<!-- .element: class="fragment" -->
+```haskell
+class Monad m where
+    return :: a -> m a
 
-```python
-class SimpleMonad:
-    def __init__(self, x):
-        self.x = x
+    (>>=) :: m a -> (a -> m b) -> m b
 
-    def bind(self, f):
-        return f(self.x)
+    (>>) :: m a -> m b -> m b
+    x >> y = x >>= \_ -> y
+
+    fail :: String -> m a
+    fail msg = error msg
 ```
 <!-- .element: class="fragment" -->
 
@@ -121,9 +117,11 @@ data Maybe t = Just t | Nothing
 <!-- .element: class="fragment" -->
 
 ```haskell
-(>>=) :: Maybe a -> (a -> Maybe b) -> Maybe b
-Nothing >>= _ = Nothing
-(Just x) >>= f = f x
+instance Monad Maybe where
+    return x = Just x
+    Nothing >>= f = Nothing
+    Just x >>= f  = f x
+    fail _ = Nothing
 ```
 <!-- .element: class="fragment" -->
 
