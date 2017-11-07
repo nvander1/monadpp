@@ -129,7 +129,7 @@ instance Monad Maybe where
 
 ## Maybe Monad Examples
 ```haskell
-nothingMonadDo = do 
+nothingMonadDo = do
   x <- Just 3
   y <- Just 10
   z <- Nothing
@@ -149,7 +149,7 @@ Nothing
 <!-- .element: class="fragment" -->
 
 ```haskell
-justMonadDo = do 
+justMonadDo = do
   x <- Just 3
   y <- Just 10
   z <- Just 11
@@ -167,10 +167,10 @@ Just 24
 
 ## The List Monad
 ```haskell
-instance Monad [] where  
-    return x = [x]  
-    xs >>= f = concat (map f xs)  
-    fail _ = []  
+instance Monad [] where
+    return x = [x]
+    xs >>= f = concat (map f xs)
+    fail _ = []
 ```
 <!-- .element: class="fragment" -->
 
@@ -215,10 +215,54 @@ doubleMonad list = [-1, 2] >> list
 ```haskell
 newtype State s a = State { runState :: s -> (a, s) }
 ```
-Really the State Monad acts like a container for the state and a function to the next state
+The state monad is actually just a wrapper for a stateful computation.
+Allows for solving stateful problems in a pure functional language.
 <!-- .element: class="fragment" -->
 
-Here s is that function and a is the current value
+The stateful computation is the function s -> (a, s).
+The function takes an initial state "s", and returns a tuple of a result "a" and a new state "s".
+<!-- .element: class="fragment" -->
+
+---
+
+## State Monad Instance Definition
+```haskell
+instance Monad (State s) where
+    return x = State $ \s -> (x,s)
+    (State h) >>= f = State $ \s -> let (a, newState) = h s
+                                        (State g) = f a
+                                    in  g newState
+```
+<!-- .element: class="fragment" -->
+
+---
+
+## State Example
+```haskell
+removeMax :: (Num a, Eq a, Ord a) => State [a] a
+removeMax = StateT $ \list -> let maxNum = maximum list in Identity (maxNum, delete maxNum list)
+
+removeMaxThreeTimes :: (Num a, Eq a, Ord a) => State [a] (a, a, a)
+removeMaxThreeTimes = do
+  x <- removeMax
+  y <- removeMax
+  z <- removeMax
+  return (x, y, z)
+
+removeMaxThreeTimesBind :: (Num a, Eq a, Ord a) => State [a] (a, a, a)
+removeMaxThreeTimesBind = removeMax >>=
+                          (\x -> removeMax >>=
+                                 (\y -> removeMax >>=
+                                        (\z -> return ((x, y, z)))))
+```
+<!-- .element: class="fragment" -->
+
+```haskell
+*Main> runState removeMax  [1, 2, 10, 11]
+(11,[1,2,10])
+*Main> runState removeMaxThreeTimes   [1, 2, 10, 11]
+((11,10,2),[1])
+```
 <!-- .element: class="fragment" -->
 
 ---
