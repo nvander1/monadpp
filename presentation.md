@@ -157,7 +157,10 @@ nothingMonadDo = do
 <!-- .element: class="fragment" -->
 
 ```haskell
-nothingMonadBind = Just 3 >>= (\x -> Just 10 >>= (\y -> Nothing >>= (\z -> return (x + y + z))))
+nothingMonadBind = Just 3 >>=
+                   (\x -> Just 10 >>=
+                     (\y -> Nothing >>=
+                       (\z -> return (x + y + z))))
 ```
 <!-- .element: class="fragment" -->
 
@@ -167,18 +170,27 @@ Nothing
 ```
 <!-- .element: class="fragment" -->
 
+---
+
+## Maybe Monad Examples (Cont.)
+
+```haskell
+addIntoMaybe x y = Just $ x + y
+```
+<!-- .element: class="fragment" -->
+
 ```haskell
 justMonadDo = do
   x <- Just 3
   y <- Just 10
-  z <- Just 11
+  z <- addIntoMaybe x y
   return (x + y + z)
 ```
 <!-- .element: class="fragment" -->
 
 ```haskell
 *Main> justMonadDo
-Just 24
+Just 26
 ```
 <!-- .element: class="fragment" -->
 
