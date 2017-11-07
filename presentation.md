@@ -226,7 +226,10 @@ oddEvenList list = do
 
 ```haskell
 oddEvenListBind :: (Integral a) => [a] -> [a]
-oddEvenListBind list = list >>= (\x -> if odd x then [x, -x] else [x])
+oddEvenListBind list = list >>=
+                       (\x -> if odd x
+                              then [x, -x]
+                              else [x])
 ```
 <!-- .element: class="fragment" -->
 
@@ -279,22 +282,36 @@ instance Monad (State s) where
 #### Examples
 ```haskell
 removeMax :: (Num a, Eq a, Ord a) => State [a] a
-removeMax = StateT $ \list -> let maxNum = maximum list in Identity (maxNum, delete maxNum list)
+removeMax = StateT $
+            \list -> let maxNum = maximum list
+                     in Identity (maxNum, delete maxNum list)
+```
+<!-- .element: class="fragment" -->
 
-removeMaxThreeTimes :: (Num a, Eq a, Ord a) => State [a] (a, a, a)
+```haskell
+removeMaxThreeTimes ::
+  (Num a, Eq a, Ord a) => State [a] (a, a, a)
 removeMaxThreeTimes = do
   x <- removeMax
   y <- removeMax
   z <- removeMax
   return (x, y, z)
-
-removeMaxThreeTimesBind :: (Num a, Eq a, Ord a) => State [a] (a, a, a)
-removeMaxThreeTimesBind = removeMax >>=
-                          (\x -> removeMax >>=
-                                 (\y -> removeMax >>=
-                                        (\z -> return ((x, y, z)))))
 ```
 <!-- .element: class="fragment" -->
+
+```haskell
+removeMaxThreeTimesBind ::
+  (Num a, Eq a, Ord a) => State [a] (a, a, a)
+removeMaxThreeTimesBind = removeMax >>=
+                          (\x -> removeMax >>=
+                            (\y -> removeMax >>=
+                              (\z -> return ((x, y, z)))))
+```
+<!-- .element: class="fragment" -->
+
+---
+
+#### Examples (Cont.)
 
 ```haskell
 *Main> runState removeMax  [1, 2, 10, 11]

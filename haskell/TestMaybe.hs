@@ -43,7 +43,10 @@ oddEvenList list = do
   if odd x then [x, -x] else [x]
 
 oddEvenListBind :: (Integral a) => [a] -> [a]
-oddEvenListBind list = list >>= (\x -> if odd x then [x, -x] else [x])
+oddEvenListBind list = list >>=
+                       (\x -> if odd x
+                              then [x, -x]
+                              else [x])
 
 doubleMonad :: [a] -> [a]
 doubleMonad list = [-1, 2] >> list
