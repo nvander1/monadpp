@@ -149,7 +149,10 @@ nothingMonadDo = do
 <!-- .element: class="fragment" -->
 
 ```haskell
-nothingMonadBind = Just 3 >>= (\x -> Just 10 >>= (\y -> Nothing >>= (\z -> return (x + y + z))))
+nothingMonadBind = Just 3 >>=
+                   (\x -> Just 10 >>=
+                     (\y -> Nothing >>=
+                       (\z -> return (x + y + z))))
 ```
 <!-- .element: class="fragment" -->
 

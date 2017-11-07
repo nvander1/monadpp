@@ -54,7 +54,10 @@ nothingMonadDo = do
   z <- Nothing
   return (x + y + z)
 
-nothingMonadBind = Just 3 >>= (\x -> Just 10 >>= (\y -> Nothing >>= (\z -> return (x + y + z))))
+nothingMonadBind = Just 3 >>=
+                   (\x -> Just 10 >>=
+                     (\y -> Nothing >>=
+                       (\z -> return (x + y + z))))
 
 addIntoMaybe x y = Just $ x + y
 
