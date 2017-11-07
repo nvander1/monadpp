@@ -326,8 +326,3 @@ removeMaxThreeTimesBind = removeMax >>=
 <!-- .element: class="fragment" -->
 
 ---
-
-- State Monad
-- Printing
-- File I/O
-- Other messy or unpure actions
