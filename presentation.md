@@ -255,12 +255,16 @@ doubleMonad list = [-1, 2] >> list
 ```haskell
 newtype State s a = State { runState :: s -> (a, s) }
 ```
-The state monad is actually just a wrapper for a stateful computation.
-Allows for solving stateful problems in a pure functional language.
+- The state monad is actually just a wrapper for a stateful computation.
 <!-- .element: class="fragment" -->
 
-The stateful computation is the function s -> (a, s).
-The function takes an initial state "s", and returns a tuple of a result "a" and a new state "s".
+- Allows for solving stateful problems in a pure functional language.
+<!-- .element: class="fragment" -->
+
+- The stateful computation is the function s -> (a, s).
+<!-- .element: class="fragment" -->
+
+- The function takes an initial state "s", and returns a tuple of a result "a" and a new state "s".
 <!-- .element: class="fragment" -->
 
 ---
