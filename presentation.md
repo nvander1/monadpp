@@ -52,6 +52,17 @@ public class PureStringBuilder {
 
 ---
 
+## Informal Definition for Monad
+- Monads: It is an enhanced type that is easily composable.
+<!-- .element: class="fragment" -->
+- Examples: List, Maybe
+<!-- .element: class="fragment" -->
+- Essentially, function composition in "disguise". 
+Can easily switch out parts in composition because of functional programming languages' rich type system.
+<!-- .element: class="fragment" -->
+
+---
+
 ## Formal Definition
 - Type constructor
 <!-- .element: class="fragment" -->
