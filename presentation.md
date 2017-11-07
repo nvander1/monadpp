@@ -13,10 +13,10 @@ Ethan Schoen, Nik Vanderhoof
 
 ## Overview
 
-Definition of monads
-Uses of monads
-Monads in Haskell
-Monads in C++
+- Definition of monads
+- Uses of monads
+- Monads in Haskell
+- Monads in C++
 
 ---
 
