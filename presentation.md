@@ -5,7 +5,7 @@ revealOptions:
 
 # Monads
 
-William Jagels, Rushil Kumar, Ethan Schoen, Nik Vandehroof
+William Jagels, Rushil Kumar, Ethan Schoen, Nik Vanderhoof
 
 ---
 
@@ -13,8 +13,8 @@ William Jagels, Rushil Kumar, Ethan Schoen, Nik Vandehroof
 
 Definition of monads
 Uses of monads
-Haskell examples
-Compile-time C++ monads
+Monads in Haskell
+Monads in C++
 
 ---
 
@@ -52,18 +52,21 @@ public class PureStringBuilder {
 
 ---
 
-## Informal Definition for Monad
-- Monads: It is an enhanced type that is easily composable.
+## What is a Monad, anyway?
+
+---
+
+### Informal Definition for Monad
+- Enhanced type that is easily composable.
 <!-- .element: class="fragment" -->
-- Examples: List, Maybe
+- Function composition in "disguise".
 <!-- .element: class="fragment" -->
-- Essentially, function composition in "disguise". 
-Can easily switch out parts in composition because of functional programming languages' rich type system.
+- Modularity with type safety
 <!-- .element: class="fragment" -->
 
 ---
 
-## Formal Definition
+### Formal Definition
 - Type constructor
 <!-- .element: class="fragment" -->
     - Defines how to obtain a monadic version of a type
@@ -81,7 +84,7 @@ Can easily switch out parts in composition because of functional programming lan
 
 ---
 
-## Monad Laws
+### Monad Laws
 ###### Left Identity
 <!-- .element: class="fragment" -->
 ```python
@@ -103,7 +106,7 @@ bind(bind(m, f), g) == bind(m, bind(lambda x: bind(f(x), g)))
 
 ---
 
-## Monad Definition
+### Monad Haskell Definition
 
 ```haskell
 class Monad m where
@@ -121,7 +124,12 @@ class Monad m where
 
 ---
 
-## The Maybe Monad
+## Example Monads
+
+---
+
+### The Maybe Monad
+#### Definition
 ```haskell
 data Maybe t = Just t | Nothing
 ```
@@ -138,7 +146,7 @@ instance Monad Maybe where
 
 ---
 
-## Maybe Monad Examples
+#### Examples
 ```haskell
 nothingMonadDo = do
   x <- Just 3
@@ -176,7 +184,8 @@ Just 24
 
 ---
 
-## The List Monad
+### The List Monad
+#### Definition
 ```haskell
 instance Monad [] where
     return x = [x]
@@ -192,7 +201,7 @@ Prelude> concat [[1,2],[3,4]]
 
 ---
 
-## List Monad Examples
+#### Examples
 ```haskell
 oddEvenList :: (Integral a) => [a] -> [a]
 oddEvenList list = do
@@ -227,7 +236,7 @@ doubleMonad list = [-1, 2] >> list
 
 ---
 
-## State Monad
+### State Monad
 ```haskell
 newtype State s a = State { runState :: s -> (a, s) }
 ```
@@ -241,7 +250,7 @@ The function takes an initial state "s", and returns a tuple of a result "a" and
 
 ---
 
-## State Monad Instance Definition
+#### Definition
 ```haskell
 instance Monad (State s) where
     return x = State $ \s -> (x,s)
@@ -253,7 +262,7 @@ instance Monad (State s) where
 
 ---
 
-## State Example
+#### Examples
 ```haskell
 removeMax :: (Num a, Eq a, Ord a) => State [a] a
 removeMax = StateT $ \list -> let maxNum = maximum list in Identity (maxNum, delete maxNum list)
