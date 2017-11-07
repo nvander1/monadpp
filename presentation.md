@@ -184,6 +184,11 @@ instance Monad [] where
     fail _ = []
 ```
 <!-- .element: class="fragment" -->
+```haskell
+Prelude> concat [[1,2],[3,4]]
+[1,2,3,4]
+```
+<!-- .element: class="fragment" -->
 
 ---
 
