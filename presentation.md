@@ -5,7 +5,9 @@ revealOptions:
 
 # Monads
 
-William Jagels, Rushil Kumar, Ethan Schoen, Nik Vanderhoof
+William Jagels, Rushil Kumar,
+
+Ethan Schoen, Nik Vanderhoof
 
 ---
 
