@@ -69,8 +69,6 @@ public class PureStringBuilder {
 ```
 <!-- .element: class="fragment" -->
 
-Note: The StringBuilder is a mutable object
-
 ---
 
 ## What is a Monad, anyway?
