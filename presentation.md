@@ -13,10 +13,28 @@ Ethan Schoen, Nik Vanderhoof
 
 ## Overview
 
+- Motivation
+<!-- .element: class="fragment" -->
 - Definition of monads
-- Uses of monads
-- Monads in Haskell
-- Monads in C++
+<!-- .element: class="fragment" -->
+- Examples in Haskell
+<!-- .element: class="fragment" -->
+    - Maybe Monad
+<!-- .element: class="fragment" -->
+    - List Monad
+<!-- .element: class="fragment" -->
+    - Monadic "do notation"
+<!-- .element: class="fragment" -->
+    - IO Monad
+<!-- .element: class="fragment" -->
+    - State Monad
+<!-- .element: class="fragment" -->
+- Examples in C++
+<!-- .element: class="fragment" -->
+    - Maybe Monad
+<!-- .element: class="fragment" -->
+    - List Monad
+<!-- .element: class="fragment" -->
 
 ---
 
@@ -59,9 +77,9 @@ public class PureStringBuilder {
 ---
 
 ### Informal Definition for Monad
-- Enhanced type that is easily composable.
+- Enhanced type that is easily composable
 <!-- .element: class="fragment" -->
-- Function composition in "disguise".
+- Function composition in "disguise"
 <!-- .element: class="fragment" -->
 - Modularity with type safety
 <!-- .element: class="fragment" -->
@@ -74,7 +92,7 @@ public class PureStringBuilder {
     - Defines how to obtain a monadic version of a type
 <!-- .element: class="fragment" -->
 
-- Unit function (or return function)
+- Unit function
 <!-- .element: class="fragment" -->
     - Takes a value, constructs a monad to house the value
 <!-- .element: class="fragment" -->
@@ -86,36 +104,17 @@ public class PureStringBuilder {
 
 ---
 
-### Monad Laws
-###### Left Identity
-<!-- .element: class="fragment" -->
-```python
-bind(unit(a), f) == f(a)```
-<!-- .element: class="fragment" -->
-
-###### Right Identity
-<!-- .element: class="fragment" -->
-```python
-bind(m, unit) == m```
-<!-- .element: class="fragment" -->
-
-###### Associativity
-<!-- .element: class="fragment" -->
-```python
-bind(bind(m, f), g) == bind(m, bind(lambda x: bind(f(x), g)))
-```
-<!-- .element: class="fragment" -->
-
----
-
 ### Monad Haskell Definition
 
 ```haskell
 class Monad m where
+    -- the "unit" function
     return :: a -> m a
 
+    -- the "bind" function
     (>>=) :: m a -> (a -> m b) -> m b
 
+    -- the "then" function
     (>>) :: m a -> m b -> m b
     x >> y = x >>= \_ -> y
 
@@ -126,7 +125,32 @@ class Monad m where
 
 ---
 
-## Example Monads
+### Monad Laws
+###### Left Identity
+<!-- .element: class="fragment" -->
+<!-- haskell syntax won't highlight these correctly -->
+```xml
+return a  >>= f       == f a
+```
+<!-- .element: class="fragment" -->
+
+###### Right Identity
+<!-- .element: class="fragment" -->
+```xml
+m         >>= return  == m
+```
+<!-- .element: class="fragment" -->
+
+###### Associativity
+<!-- .element: class="fragment" -->
+```xml
+(m >>= f) >>= g       == m >>= (\ x -> f x >>= g)
+```
+<!-- .element: class="fragment" -->
+
+---
+
+## Example Monads in Haskell
 
 ---
 
@@ -174,7 +198,7 @@ Nothing
 
 ---
 
-#### Maybe Monad Examples (Cont.)
+#### Examples (Cont.)
 
 ```haskell
 addIntoMaybe x y = Just $ x + y
@@ -253,7 +277,8 @@ doubleMonad list = [-1, 2] >> list
 
 ---
 
-### do notation
+### Monadic "do notation"
+#### *then* operator translation
 ```haskell
 putStr "Hello," >>
 putStr " " >>
@@ -272,13 +297,13 @@ do
 
 ---
 
-### do notation
+#### *bind* operator translation
 ```haskell
 add :: Maybe Integer -> Maybe Integer -> Maybe Integer
 ```
 <!-- .element: class="fragment" -->
 ```haskell
-add mx my = 
+add mx my =
   mx >>= (\x ->
     my >>= (\y ->
       return (x+y)))
@@ -334,6 +359,75 @@ main = do
 main :: IO ()
 main = putStrLn "Who are you?" >>
   getLine >>= (\name -> putStrLn ("You are ") ++ name ++ "!")
+```
+<!-- .element: class="fragment" -->
+
+---
+
+#### Examples
+```haskell
+foo :: String
+foo = "Hello"
+```
+<!-- .element: class="fragment" -->
+```haskell
+*Main> some_words = replicate 5 foo
+```
+<!-- .element: class="fragment" -->
+```haskell
+*Main> some_words
+["Hello", "Hello", "Hello", "Hello", "Hello"]
+```
+<!-- .element: class="fragment" -->
+```haskell
+*Main> :t some_words
+[String]
+```
+<!-- .element: class="fragment" -->
+```haskell
+*Main> different_words = replicate 5 getLine
+*Main> :t different_words
+[IO String]
+```
+<!-- .element: class="fragment" -->
+
+---
+
+#### Examples (Cont.)
+```haskell
+sequence :: Monad m => [m a] -> m [a]
+```
+<!-- .element: class="fragment" -->
+```haskell
+sequence [] = return []
+```
+<!-- .element: class="fragment" -->
+```haskell
+sequence (m:ms) = do
+    x <- m
+    xs = sequence ms
+    return (x:xs)
+```
+<!-- .element: class="fragment" -->
+
+---
+
+#### Examples (Cont.)
+```haskell
+*Main> different_words = sequence $ replicate 3 getLine
+```
+<!-- .element: class="fragment" -->
+```haskell
+*Main> :t different_words
+IO [String]
+```
+<!-- .element: class="fragment" -->
+```haskell
+*Main> different_words
+hello
+
+world
+["hello", "", "world"]
 ```
 <!-- .element: class="fragment" -->
 
