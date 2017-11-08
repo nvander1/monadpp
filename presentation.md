@@ -292,6 +292,8 @@ add mx my = do
 ```
 <!-- .element: class="fragment" -->
 
+---
+
 ### IO Monad
 
 - expressions denote a value
