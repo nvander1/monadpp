@@ -506,3 +506,96 @@ removeMaxThreeTimesBind = removeMax >>=
 <!-- .element: class="fragment" -->
 
 ---
+
+## Monads in C++17
+
+---
+
+### Goals
+- Deduced types
+- Similar to Haskell
+- Constexpr
+- User defined
+
+---
+
+#### Generic Monads
+
+---
+
+##### Ignore Operator
+```c++
+template <typename T, typename U>
+constexpr auto operator>>(const T &ignored_monad, const U &other_monad) {
+  return ignored_monad >>= [other_monad](auto &&) { return other_monad; };
+}
+```
+
+---
+
+##### Bind Operator
+```c++
+template <typename M, typename F,
+          typename = std::enable_if_t<
+              std::is_invocable_v<F, decltype(std::declval<M>().data())>>>
+constexpr auto operator>>=(const M &monad, F &&fn)
+    -> std::invoke_result_t<F, decltype(monad.data())> {
+  return std::invoke(fn, monad.data());
+}
+```
+
+---
+
+##### Like Curry?
+```c++
+template <typename F, typename A>
+auto curry(F &&f, const A &a) {
+  return [=](auto &&... rest) constexpr {
+    return std::invoke(f, a, std::forward<decltype(rest)>(rest)...);
+  };
+}
+```
+Usage:
+```c++
+int sum(int a, int b, int c);
+
+int a = curry(curry(curry(sum, 1), 2), 3)();
+// a == 6
+```
+
+---
+
+#### List Monads
+
+---
+
+#### Bind Operator
+```c++
+namespace monad {
+template <typename T, std::size_t N, typename F,
+          typename = std::enable_if_t<std::is_invocable_v<F, T>>>
+constexpr auto operator>>=(const std::array<T, N> &list, F &&fn) {
+  return map_flatten(list, std::move(fn));
+}
+```
+```c++
+template <typename T, std::size_t N, typename F>
+constexpr auto map_flatten(const std::array<T, N> &list, F &&fn) {
+  detail::map_flatten_helper<F> helper{std::move_if_noexcept(fn)};
+  return tuple_to_array(std::apply(helper, list));
+}
+```
+
+---
+
+```c++
+template <typename F>
+struct map_flatten_helper {
+  constexpr map_flatten_helper(F f) : fn{std::move(f)} {}
+  template <typename... Ts>
+  constexpr auto operator()(Ts... args) {
+    return std::tuple_cat(fn(args)...);
+  }
+  F fn;
+};
+```

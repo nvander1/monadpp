@@ -14,7 +14,7 @@ struct tuple_to_array_helper {
 
 template <typename F>
 struct map_helper {
-  constexpr map_helper(F &&f) : fn{std::move(f)} {}
+  constexpr map_helper(F f) : fn{std::move(f)} {}
   template <typename... Ts>
   constexpr auto operator()(Ts... args)
       -> std::array<std::common_type_t<Ts...>, sizeof...(Ts)> {
@@ -25,7 +25,7 @@ struct map_helper {
 
 template <typename F>
 struct map_flatten_helper {
-  constexpr map_flatten_helper(F &&f) : fn{std::move(f)} {}
+  constexpr map_flatten_helper(F f) : fn{std::move(f)} {}
   template <typename... Ts>
   constexpr auto operator()(Ts... args) {
     return std::tuple_cat(fn(args)...);
@@ -54,11 +54,10 @@ constexpr auto map_flatten(const std::array<T, N> &list, F &&fn) {
   return tuple_to_array(std::apply(helper, list));
 }
 
-template <typename F, typename... Args>
-auto curry(F &&f, Args &&... args) {
-  return [=](auto &&... rest) {
-    return f(std::forward<Args>(args)...,
-             std::forward<decltype(rest)>(rest)...);
+template <typename F, typename A>
+auto curry(F &&f, const A &a) {
+  return [=](auto &&... rest) constexpr {
+    return std::invoke(f, a, std::forward<decltype(rest)>(rest)...);
   };
 }
 

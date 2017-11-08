@@ -13,11 +13,11 @@ constexpr auto operator>>=(const std::array<T, N> &list, F &&fn) {
 }
 
 template <typename T, std::size_t N, typename F,
-          typename = std::enable_if_t<std::is_invocable_v<F, T>>,
-          typename R = std::invoke_result_t<F, T>>
+          typename = std::enable_if_t<std::is_invocable_v<F, T>>>
 constexpr auto operator>>=(
     const std::experimental::fixed_capacity_vector<T, N> &list, F &&fn) {
   using std::experimental::fixed_capacity_vector;
+  using R = std::invoke_result_t<F, T>;
   auto new_list =
       fixed_capacity_vector<typename R::value_type, R::capacity() * N>{};
   for (const auto &e : list) {
