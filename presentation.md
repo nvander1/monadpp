@@ -319,8 +319,23 @@ putStrLn :: String -> IO ()
 ### Programs as IO Actions
 ```haskell
 main :: IO ()
-main = putChar '!'
+main = putStrLn "hello world";
 ```
+<!-- .element: class="fragment" -->
+```haskell
+main :: IO ()
+main = do
+    putStrLn "Who are you?"
+    name <- getLine
+    putStrLn ("You are " ++ name ++ "!")
+```
+<!-- .element: class="fragment" -->
+```haskell
+main :: IO ()
+main = putStrLn "Who are you?" >>
+  getLine >>= (\name -> putStrLn ("You are ") ++ name ++ "!")
+```
+<!-- .element: class="fragment" -->
 
 ---
 
