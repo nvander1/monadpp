@@ -1,6 +1,5 @@
 ---
 revealOptions:
-    transition: 'fade'
     controls: false
 ---
 
