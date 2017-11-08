@@ -466,6 +466,12 @@ instance Monad (State s) where
 ```
 <!-- .element: class="fragment" -->
 
+```haskell
+get = State $ \s -> (s,s)
+put newState = State $ \s -> ((),newState)
+```
+<!-- .element: class="fragment" -->
+
 ----
 
 #### Examples
@@ -507,6 +513,49 @@ removeMaxThreeTimesBind = removeMax >>=
 (11,[1,2,10])
 *Main> runState removeMaxThreeTimes   [1, 2, 10, 11]
 ((11,10,2),[1])
+```
+<!-- .element: class="fragment" -->
+
+----
+
+#### Examples (Cont.)
+
+```haskell
+playString :: String -> State (Integer, Integer) Integer
+playString []     = do
+  (player1, player2) <- get
+  if player1 < player2 then return 2
+    else
+    if player2 < player1
+    then return 1
+    else return 0
+```
+<!-- .element: class="fragment" -->
+
+```haskell
+playString (x:xs) = do
+  (player1, player2) <- get
+  case x of
+    'a' -> put (player1 + 1, player2)
+    'b' -> put (player1 + 2, player2)
+    'c' -> put (player1, player2 + 1)
+    'd' -> put (player1, player2 + 2)
+    _   -> put (player1, player2)
+  playString xs
+```
+<!-- .element: class="fragment" -->
+
+----
+
+#### Examples (Cont.)
+
+```haskell
+*Main> runState (playString "acacac") (0, 0)
+(0,(3,3))
+*Main> runState (playString "bdbbaaaa") (0, 0)
+(1,(10,2))
+*Main> runState (playString "aadd") (0, 0)
+(2,(2,4))
 ```
 <!-- .element: class="fragment" -->
 
