@@ -174,7 +174,7 @@ Nothing
 
 ---
 
-## Maybe Monad Examples (Cont.)
+#### Maybe Monad Examples (Cont.)
 
 ```haskell
 addIntoMaybe x y = Just $ x + y
@@ -252,6 +252,73 @@ doubleMonad list = [-1, 2] >> list
 <!-- .element: class="fragment" -->
 
 ---
+
+### do notation
+```haskell
+putStr "Hello," >>
+putStr " " >>
+putStr "World!" >>
+putStr "\n"
+```
+<!-- .element: class="fragment" -->
+```haskell
+do
+    putStr "Hello,"
+    putStr " "
+    putStr "World!"
+    putStr "\n"
+```
+<!-- .element: class="fragment" -->
+
+---
+
+### do notation
+```haskell
+add :: Maybe Integer -> Maybe Integer -> Maybe Integer
+```
+<!-- .element: class="fragment" -->
+```haskell
+add mx my = 
+  mx >>= (\x ->
+    my >>= (\y ->
+      return (x+y)))
+```
+<!-- .element: class="fragment" -->
+```haskell
+add mx my = do
+  x <- mx
+  y <- my
+  return (x + y)
+```
+<!-- .element: class="fragment" -->
+
+### IO Monad
+
+- expressions denote a value
+<!-- .element: class="fragment" -->
+- I/O commands perform some action
+<!-- .element: class="fragment" -->
+
+```haskell
+getChar :: IO Char
+```
+<!-- .element: class="fragment" -->
+```haskell
+putChar :: Char -> IO ()
+```
+<!-- .element: class="fragment" -->
+```haskell
+putStrLn :: String -> IO ()
+```
+<!-- .element: class="fragment" -->
+
+---
+
+### Programs as IO Actions
+```haskell
+main :: IO ()
+main = putChar '!'
+```
 
 ### State Monad
 ```haskell
