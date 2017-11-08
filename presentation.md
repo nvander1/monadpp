@@ -160,6 +160,9 @@ m         >>= return  == m
 ---
 
 ### The Maybe Monad
+
+----
+
 #### Definition
 ```haskell
 data Maybe t = Just t | Nothing
@@ -228,6 +231,9 @@ Just 26
 ---
 
 ### The List Monad
+
+----
+
 #### Definition
 ```haskell
 instance Monad [] where
@@ -283,6 +289,9 @@ doubleMonad list = [-1, 2] >> list
 ---
 
 ### Monadic "do notation"
+
+----
+
 #### >> operator translation
 ```haskell
 putStr "Hello," >>
@@ -326,13 +335,21 @@ add mx my = do
 
 ### IO Monad
 
+----
+
+#### Pure Expressions vs IO Actions
 - expressions denote a value
 <!-- .element: class="fragment" -->
-- I/O commands perform some action
+- I/O commands perform some action or materialize some value
 <!-- .element: class="fragment" -->
 
 ```haskell
-getChar :: IO Char
+giveHello :: String
+giveHello = "Hello!"
+```
+<!-- .element: class="fragment" -->
+```haskell
+getLine :: IO String
 ```
 <!-- .element: class="fragment" -->
 ```haskell
@@ -346,7 +363,7 @@ putStrLn :: String -> IO ()
 
 ----
 
-### Programs as IO Actions
+#### Programs as IO Actions
 ```haskell
 main :: IO ()
 main = putStrLn "hello world";
@@ -439,6 +456,10 @@ world
 ---
 
 ### State Monad
+
+----
+
+#### Key Concept
 ```haskell
 newtype State s a = State { runState :: s -> (a, s) }
 ```
