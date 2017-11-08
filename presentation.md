@@ -536,7 +536,7 @@ constexpr auto operator>>(const T &ignored_monad, const U &other_monad) {
 }
 ```
 
----
+----
 
 #### Bind Operator
 ```c++
@@ -549,7 +549,7 @@ constexpr auto operator>>=(const M &monad, F &&fn)
 }
 ```
 
----
+----
 
 #### Like Curry?
 ```c++
@@ -586,7 +586,7 @@ struct DoubleMonad {
 };
 ```
 
----
+----
 
 #### Use it
 ```c++
@@ -604,7 +604,7 @@ constexpr DoubleMonad r = m1 >>= fn;
 
 ### List Monads
 
----
+----
 
 #### Bind Operator
 ```c++
@@ -616,7 +616,7 @@ constexpr auto operator>>=(const std::array<T, N> &list, F &&fn) {
 }
 ```
 
----
+----
 
 ```c++
 template <typename T, std::size_t N, typename F>
@@ -637,7 +637,7 @@ struct map_flatten_helper {
 };
 ```
 
----
+----
 
 #### Usage
 ```c++
@@ -654,11 +654,11 @@ array{1, 2, 3, 4} >>= [](int a) { return array{a, a + 1}; };
 Quiz: what is this?
 <!-- .element: class="fragment" -->
 
----
+----
 
 But there's a catch...
 
----
+----
 
 ```c++
 [](int a) {
@@ -697,7 +697,7 @@ constexpr auto operator>>=(const std::fixed_capacity_vector<T, N> &list, F &&fn)
 }
 ```
 
----
+----
 
 #### Usage
 ```c++
@@ -720,6 +720,8 @@ Notice, the end result only has 6/8 elements
 - Write operator>>= for std::{vector, list, forward_list, map, ...}
 
 It's easier to write a bind operator in a non-constexpr context
+
+---
 
 #### Another Catch
 operator>>= is right-associative in C++, this can't be changed
