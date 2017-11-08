@@ -39,7 +39,6 @@ Ethan Schoen, Nik Vanderhoof
 ---
 
 ## Method Chaining
-
 ```java
 StringBuilder sb = new StringBuilder();
 
@@ -69,6 +68,7 @@ public class PureStringBuilder {
 }
 ```
 <!-- .element: class="fragment" -->
+Note: The StringBuilder is a mutable object
 
 ---
 
