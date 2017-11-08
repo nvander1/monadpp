@@ -1,5 +1,6 @@
 ---
 revealOptions:
+    transition: slide
     controls: false
 ---
 
