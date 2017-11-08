@@ -12,7 +12,7 @@ template <typename M, typename F,
               std::is_invocable_v<F, decltype(std::declval<M>().data())>>>
 constexpr auto operator>>=(const M &monad, F &&fn)
     -> std::invoke_result_t<F, decltype(monad.data())> {
-  return std::invoke(fn, monad.data());
+  return fn(monad.data());
 }
 
 template <typename T, typename U>

@@ -524,11 +524,11 @@ removeMaxThreeTimesBind = removeMax >>=
 
 ---
 
-#### Generic Monads
+### Generic Monads
 
 ---
 
-##### Ignore Operator
+#### Ignore Operator
 ```c++
 template <typename T, typename U>
 constexpr auto operator>>(const T &ignored_monad, const U &other_monad) {
@@ -538,25 +538,25 @@ constexpr auto operator>>(const T &ignored_monad, const U &other_monad) {
 
 ---
 
-##### Bind Operator
+#### Bind Operator
 ```c++
 template <typename M, typename F,
           typename = std::enable_if_t<
               std::is_invocable_v<F, decltype(std::declval<M>().data())>>>
 constexpr auto operator>>=(const M &monad, F &&fn)
     -> std::invoke_result_t<F, decltype(monad.data())> {
-  return std::invoke(fn, monad.data());
+  return fn(monad.data());
 }
 ```
 
 ---
 
-##### Like Curry?
+#### Like Curry?
 ```c++
 template <typename F, typename A>
-auto curry(F &&f, const A &a) {
+constexpr auto curry(F &&f, const A &a) {
   return [=](auto &&... rest) constexpr {
-    return std::invoke(f, a, std::forward<decltype(rest)>(rest)...);
+    return f(a, std::forward<decltype(rest)>(rest)...);
   };
 }
 ```
@@ -570,7 +570,39 @@ int a = curry(curry(curry(sum, 1), 2), 3)();
 
 ---
 
-#### List Monads
+#### Let's Make a Monad
+```c++
+struct IntMonad {
+  explicit constexpr IntMonad(int data) : data_{data} {}
+  constexpr int data() const { return data_; }
+  const int data_;
+};
+```
+```c++
+struct DoubleMonad {
+  explicit constexpr DoubleMonad(double data) : data_{data} {}
+  constexpr double data() const { return data_; }
+  const double data_;
+};
+```
+
+---
+
+#### Use it
+```c++
+/*   fn ::   int    -> DoubleMonad */
+/*   fn =       \x  ->                   ...  */
+auto fn = [](int x) -> DoubleMonad {
+  return DoubleMonad{static_cast<double>(x * x)};
+};
+constexpr IntMonad m1{5};
+constexpr DoubleMonad r = m1 >>= fn;
+/* r == 25.0 */
+```
+
+---
+
+### List Monads
 
 ---
 
@@ -583,6 +615,9 @@ constexpr auto operator>>=(const std::array<T, N> &list, F &&fn) {
   return map_flatten(list, std::move(fn));
 }
 ```
+
+---
+
 ```c++
 template <typename T, std::size_t N, typename F>
 constexpr auto map_flatten(const std::array<T, N> &list, F &&fn) {
@@ -590,9 +625,6 @@ constexpr auto map_flatten(const std::array<T, N> &list, F &&fn) {
   return tuple_to_array(std::apply(helper, list));
 }
 ```
-
----
-
 ```c++
 template <typename F>
 struct map_flatten_helper {
@@ -604,3 +636,95 @@ struct map_flatten_helper {
   F fn;
 };
 ```
+
+---
+
+#### Usage
+```c++
+constexpr std::array x = {1, 2, 3, 4};
+constexpr auto f = [](int a) { return std::array<int, 2>{a, a + 1}; };
+constexpr std::array<int, 8> y = x >>= f;
+```
+With less noise...
+<!-- .element: class="fragment" -->
+```c++
+array{1, 2, 3, 4} >>= [](int a) { return array{a, a + 1}; };
+```
+<!-- .element: class="fragment" -->
+Quiz: what is this?
+<!-- .element: class="fragment" -->
+
+---
+
+But there's a catch...
+
+---
+
+```c++
+[](int a) {
+    if (a % 2)
+      return std::array<int, 1>{a};
+    return std::array<int, 2>{0, a};
+};
+```
+Not allowed!
+
+Quiz: why not?
+
+---
+
+### Dynamic Size
+We can still do this at compile time!
+
+Enter [P0843](https://gnzlbg.github.io/fixed_capacity_vector/)
+
+---
+
+#### Bind Operator
+```c++
+template <typename T, std::size_t N, typename F, /*constraints*/>
+constexpr auto operator>>=(const std::fixed_capacity_vector<T, N> &list, F &&fn) {
+  using std::fixed_capacity_vector;
+  using R = std::invoke_result_t<F, T>;
+  auto new_list =
+      fixed_capacity_vector<typename R::value_type, R::capacity() * N>{};
+  for (const auto &e : list) {
+    for (auto &&f : fn(e)) {
+      new_list.emplace_back(std::move(f));
+    }
+  }
+  return new_list;
+}
+```
+
+---
+
+#### Usage
+```c++
+using std::fixed_capacity_vector;
+constexpr fixed_capacity_vector<int, 4> vec = {1, 2, 3, 4};
+constexpr auto f = [](int a) -> fixed_capacity_vector<int, 2> {
+  if (a % 2) return {{a}};
+  return {{0, a}};
+};
+constexpr auto mapped = vec >>= f;
+constexpr auto expected = fixed_capacity_vector<int, 8>{{1, 0, 2, 3, 0, 4}};
+static_assert(mapped == expected);
+```
+Notice, the end result only has 6/8 elements
+
+---
+
+#### What if I don't know how much room I need?
+- Set it "big enough"
+- Write operator>>= for std::{vector, list, forward_list, map, ...}
+
+It's easier to write a bind operator in a non-constexpr context
+
+#### Another Catch
+operator>>= is right-associative in C++, this can't be changed
+
+Solutions:
+- Use another operator
+- Make bind a function
+- Parenthesis

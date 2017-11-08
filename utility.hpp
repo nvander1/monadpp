@@ -55,9 +55,9 @@ constexpr auto map_flatten(const std::array<T, N> &list, F &&fn) {
 }
 
 template <typename F, typename A>
-auto curry(F &&f, const A &a) {
+constexpr auto curry(F &&f, const A &a) {
   return [=](auto &&... rest) constexpr {
-    return std::invoke(f, a, std::forward<decltype(rest)>(rest)...);
+    return f(a, std::forward<decltype(rest)>(rest)...);
   };
 }
 
