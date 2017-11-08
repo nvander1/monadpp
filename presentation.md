@@ -322,6 +322,8 @@ main :: IO ()
 main = putChar '!'
 ```
 
+---
+
 ### State Monad
 ```haskell
 newtype State s a = State { runState :: s -> (a, s) }
