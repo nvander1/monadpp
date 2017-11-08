@@ -21,8 +21,8 @@ TEST(list_monad, dynamic) {  // NOLINT
   using std::experimental::fixed_capacity_vector;
   constexpr fixed_capacity_vector<int, 4> vec = {1, 2, 3, 4};
   constexpr auto f = [](int a) -> fixed_capacity_vector<int, 2> {
-    if (a % 2 == 0) return {{0, a}};
-    return {{a}};
+    if (a % 2) return {{a}};
+    return {{0, a}};
   };
   constexpr auto mapped = vec >>= f;
   constexpr auto expected = fixed_capacity_vector<int, 8>{{1, 0, 2, 3, 0, 4}};
@@ -40,39 +40,39 @@ TEST(list_monad, list_comp) {  // NOLINT
 class IntMonad {
  public:
   explicit constexpr IntMonad(int data) : d_data{data} {}
-  int data() const { return d_data; }
+  constexpr int data() const { return d_data; }
 
  private:
   const int d_data;
 };
-struct DoubleMonad {
+class DoubleMonad {
  public:
   explicit constexpr DoubleMonad(double data) : d_data{data} {}
-  double data() const { return d_data; }
+  constexpr double data() const { return d_data; }
 
  private:
   const double d_data;
 };
 
 TEST(custom_monad, simple) {  // NOLINT
-  auto fn = [](int x) -> DoubleMonad { return DoubleMonad{std::pow(x, 2)}; };
-  IntMonad m1{5};
-  DoubleMonad r = m1 >>= fn;
+  auto fn = [](int x) -> DoubleMonad {
+    return DoubleMonad{static_cast<double>(x * x)};
+  };
+  constexpr IntMonad m1{5};
+  constexpr DoubleMonad r = m1 >>= fn;
   EXPECT_EQ(r.data(), 25.0);
 }
 
 TEST(custom_monad, ignore) {  // NOLINT
-  IntMonad m1{1};
-  IntMonad m2{2};
-  auto r = m1 >> m2;
+  constexpr IntMonad m1{1};
+  constexpr IntMonad m2{2};
+  constexpr auto r = m1 >> m2;
   EXPECT_EQ(r.data(), 2);
 }
 
-int sum(int a, int b, int c) {
-  return a + b + c;
-}
+constexpr int sum(int a, int b, int c) { return a + b + c; }
 
 TEST(curry, curry) {  // NOLINT
-  auto a = curry(curry(curry(sum, 1), 2), 3)();
+  constexpr auto a = curry(curry(curry(sum, 1), 2), 3)();
   EXPECT_EQ(a, 6);
 }
