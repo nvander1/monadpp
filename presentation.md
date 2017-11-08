@@ -39,7 +39,6 @@ Ethan Schoen, Nik Vanderhoof
 ---
 
 ## Method Chaining
-
 ```java
 StringBuilder sb = new StringBuilder();
 
@@ -126,6 +125,11 @@ class Monad m where
 ---
 
 ### Monad Laws
+```xml
+f :: a -> m a
+g :: a -> m a
+```
+<!-- .element: class="fragment" -->
 ###### Left Identity
 <!-- .element: class="fragment" -->
 <!-- haskell syntax won't highlight these correctly -->
