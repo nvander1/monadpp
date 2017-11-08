@@ -175,7 +175,7 @@ instance Monad Maybe where
 ```
 <!-- .element: class="fragment" -->
 
----
+----
 
 #### Examples
 ```haskell
@@ -201,7 +201,7 @@ Nothing
 ```
 <!-- .element: class="fragment" -->
 
----
+----
 
 #### Examples (Cont.)
 
@@ -242,7 +242,7 @@ Prelude> concat [[1,2],[3,4]]
 ```
 <!-- .element: class="fragment" -->
 
----
+----
 
 #### Examples
 ```haskell
@@ -283,7 +283,7 @@ doubleMonad list = [-1, 2] >> list
 ---
 
 ### Monadic "do notation"
-#### *then* operator translation
+#### >> operator translation
 ```haskell
 putStr "Hello," >>
 putStr " " >>
@@ -300,9 +300,9 @@ do
 ```
 <!-- .element: class="fragment" -->
 
----
+----
 
-#### *bind* operator translation
+#### >>= operator translation
 ```haskell
 add :: Maybe Integer -> Maybe Integer -> Maybe Integer
 ```
@@ -344,7 +344,7 @@ putStrLn :: String -> IO ()
 ```
 <!-- .element: class="fragment" -->
 
----
+----
 
 ### Programs as IO Actions
 ```haskell
@@ -367,7 +367,7 @@ main = putStrLn "Who are you?" >>
 ```
 <!-- .element: class="fragment" -->
 
----
+----
 
 #### Examples
 ```haskell
@@ -396,7 +396,7 @@ foo = "Hello"
 ```
 <!-- .element: class="fragment" -->
 
----
+----
 
 #### Examples (Cont.)
 ```haskell
@@ -415,7 +415,7 @@ sequence (m:ms) = do
 ```
 <!-- .element: class="fragment" -->
 
----
+----
 
 #### Examples (Cont.)
 ```haskell
@@ -454,7 +454,7 @@ newtype State s a = State { runState :: s -> (a, s) }
 - The function takes an initial state "s", and returns a tuple of a result "a" and a new state "s".
 <!-- .element: class="fragment" -->
 
----
+----
 
 #### Definition
 ```haskell
@@ -466,7 +466,7 @@ instance Monad (State s) where
 ```
 <!-- .element: class="fragment" -->
 
----
+----
 
 #### Examples
 ```haskell
@@ -498,7 +498,7 @@ removeMaxThreeTimesBind = removeMax >>=
 ```
 <!-- .element: class="fragment" -->
 
----
+----
 
 #### Examples (Cont.)
 
