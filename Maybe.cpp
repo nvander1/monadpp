@@ -3,9 +3,9 @@
 using namespace monad;
 
 int main() {
-  constexpr Just<int> const a = Just{5};
-  constexpr Nothing<int> const b = Nothing<int>{};
-  constexpr Nothing<int> const result = add(a, b);
+  constexpr auto a = Just{5};
+  constexpr auto b = Nothing<int>{};
+  constexpr auto result = add(a, b);
   constexpr Nothing<int> const ignored_result = a >> b;
   constexpr Nothing<int> const another_result = a >>= [=](auto num) {
     constexpr Nothing<int> const temp_nothing{};

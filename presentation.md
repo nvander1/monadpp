@@ -228,6 +228,29 @@ Just 26
 ```
 <!-- .element: class="fragment" -->
 
+----
+
+#### Examples (Cont.)
+
+```haskell
+add :: Maybe Integer -> Maybe Integer -> Maybe Integer
+```
+<!-- .element: class="fragment" -->
+```haskell
+add mx my =
+    mx >>= (\ x ->
+        my >>= (\ y ->
+            return (x + y)))
+```
+<!-- .element: class="fragment" -->
+```haskell
+add mx my = do
+    x <- mx
+    y <- my
+    return (x + y)
+```
+<!-- .element: class="fragment" -->
+
 ---
 
 ### The List Monad
@@ -620,6 +643,133 @@ constexpr IntMonad m1{5};
 constexpr DoubleMonad r = m1 >>= fn;
 /* r == 25.0 */
 ```
+
+---
+
+### Maybe Monad
+
+----
+
+#### Haskell Implementation
+```haskell
+data Maybe a = Just a | Nothing
+(>>=) :: Maybe a -> (a -> Maybe b) -> Maybe b
+Nothing >>= _ = Nothing
+(Just x) >>= f = f x
+```
+
+----
+
+#### Nothing
+```c++
+template <typename A>
+struct Nothing {
+  // Nothing >>= _ = Nothing
+  template <typename F, typename = std::enable_if_t<std::is_invocable_v<F, A>>>
+  constexpr auto operator>>=(F &&) const {
+    return Nothing{};
+  }
+};
+```
+
+----
+
+#### Just
+```c++
+template <typename A>
+struct Just {
+  constexpr Just(A val) : d_val(val) {}
+
+  template <typename F, typename = std::enable_if_t<std::is_invocable_v<F, A>>>
+  constexpr auto operator>>=(F &&func) const {
+    return func(d_val);
+  }
+  const A d_val;
+};
+```
+
+----
+
+#### Type Checking
+```c++
+template <typename T>
+struct is_maybe_helper : std::false_type {};
+
+template <typename T>
+struct is_maybe_helper<Nothing<T>> : std::true_type {};
+
+template <typename T>
+struct is_maybe_helper<Just<T>> : std::true_type {};
+```
+<!-- .element: class="fragment" -->
+```c++
+template <typename T>
+struct is_maybe
+    : is_maybe_helper<typename std::remove_reference_t<std::remove_cv_t<T>>> {};
+
+template <typename T>
+inline constexpr bool is_maybe_v = is_maybe<T>::value;
+
+template <typename... Rest>
+inline constexpr bool are_maybe_v = (is_maybe_v<Rest> && ...);
+```
+<!-- .element: class="fragment" -->
+
+----
+
+#### Adding two Maybes
+```haskell
+add :: Maybe Integer -> Maybe Integer -> Maybe Integer
+```
+```haskell
+add mx my = do
+    x <- mx
+    y <- my
+    return (x + y)
+```
+```haskell
+add mx my =
+    mx >>= (\ x ->
+        my >>= (\ y ->
+            return (x + y)))
+```
+<!-- .element: class="fragment" -->
+
+----
+
+#### Adding two Maybes (C++)
+```c++
+template <typename A, typename B,
+          typename = std::enable_if_t<are_maybe_v<A, B>>>
+constexpr auto add(const A &mx, const B &my) {
+  return
+    mx >>= ([=](auto) constexpr { return
+        my >>= ([=](auto) constexpr { return
+            Just{x + y}; 
+        };
+    };
+}
+```
+<!-- .element: class="fragment" -->
+```c++
+constexpr auto a = Just{5};
+```
+<!-- .element: class="fragment" -->
+```c++
+constexpr auto b = Nothing<int>{};
+```
+<!-- .element: class="fragment" -->
+```c++
+constexpr auto result = add(a, b);
+```
+<!-- .element: class="fragment" -->
+```c++
+constexpr auto result = add(a, 6);
+// candidate template ignored: requirement
+// 'are_maybe_v<monad::Just<int>, int>'
+// was not satisfied [with A = monad::Just<int>, B = int]
+```
+<!-- .element: class="fragment" -->
 
 ---
 

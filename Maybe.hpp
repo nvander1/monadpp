@@ -45,11 +45,14 @@ struct is_maybe
 template <typename T>
 inline constexpr bool is_maybe_v = is_maybe<T>::value;
 
+template <typename... Rest>
+inline constexpr bool are_maybe_v = (is_maybe_v<Rest> && ...);
+
 template <typename Lhs, typename Rhs,
-          typename = std::enable_if_t<is_maybe_v<Lhs> && is_maybe_v<Rhs>>>
+          typename = std::enable_if_t<are_maybe_v<Lhs, Rhs>>>
 constexpr auto add(const Lhs &mx, const Rhs &my) {
-  return mx >>= [=](const int x) constexpr {
-    return my >>= [=](const int y) constexpr { return Just{x + y}; };
+  return mx >>= [=](auto x) constexpr {
+    return my >>= [=](auto y) constexpr { return Just{x + y}; };
   };
 }
 
