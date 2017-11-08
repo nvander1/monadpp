@@ -68,6 +68,7 @@ public class PureStringBuilder {
 }
 ```
 <!-- .element: class="fragment" -->
+
 Note: The StringBuilder is a mutable object
 
 ---
@@ -126,6 +127,11 @@ class Monad m where
 ---
 
 ### Monad Laws
+```xml
+f :: a -> m a
+g :: a -> m a
+```
+<!-- .element: class="fragment" -->
 ###### Left Identity
 <!-- .element: class="fragment" -->
 <!-- haskell syntax won't highlight these correctly -->
