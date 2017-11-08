@@ -792,8 +792,8 @@ template <typename A, typename B,
           typename = std::enable_if_t<are_maybe_v<A, B>>>
 constexpr auto add(const A &mx, const B &my) {
   return
-    mx >>= ([=](auto) constexpr { return
-        my >>= ([=](auto) constexpr { return
+    mx >>= ([=](auto x) constexpr { return
+        my >>= ([=](auto y) constexpr { return
             Just{x + y}; 
         };
     };
